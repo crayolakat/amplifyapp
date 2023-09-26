@@ -4,3 +4,18 @@ type Note @model @auth(rules: [ { allow: public } ]) {
   description: String
   image: String
 }
+
+type Order @model @auth(rules: [ { allow: public } ]) {
+  id: ID!
+  product: Product! @hasOne
+  tracking_company: String
+  tracking_number: String
+  status: String!
+}
+
+type Product @model @auth(rules: [ { allow: public } ]) {
+  id: ID!
+  name: String!
+  price: Float!
+  stock_quantity: Int!
+}

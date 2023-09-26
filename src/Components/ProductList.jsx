@@ -11,13 +11,10 @@ import {
 } from "@aws-amplify/ui-react"
 import "../ui-components/NoteCreateForm";
 import '@aws-amplify/ui-react/styles.css';
+import { FaPenToSquare } from "react-icons/fa6";
 import Modal from "react-modal";
 import ProductCreateForm from "../ui-components/ProductCreateForm";
 import { listProducts } from "../graphql/queries";
-import {
-  createNote as createNoteMutation,
-  deleteNote as deleteNoteMutation
-} from "../graphql/mutations";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -115,7 +112,10 @@ function Products() {
             </TableRow>
             {products.map(product => (
               <TableRow>
-                <TableCell as="tr">{product.name}</TableCell>
+                <TableCell as="tr">
+                  <Button marginRight="1rem"><FaPenToSquare /></Button>
+                  {product.name}
+                </TableCell>
                 <TableCell as="tr">{product.price}</TableCell>
                 <TableCell as="tr">{product.stock_quantity}</TableCell>
               </TableRow>

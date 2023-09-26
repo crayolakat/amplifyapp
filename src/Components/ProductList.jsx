@@ -14,9 +14,11 @@ import '@aws-amplify/ui-react/styles.css';
 import { FaPenToSquare } from "react-icons/fa6";
 import Modal from "react-modal";
 import ProductCreateForm from "../ui-components/ProductCreateForm";
+import ProductUpdateForm from "../ui-components/ProductUpdateForm";
 import { listProducts } from "../graphql/queries";
 
 function Products() {
+  // Products
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -32,7 +34,27 @@ function Products() {
     setProducts(productsFromAPI);
   }
 
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+  // Modals
+  const [createModalIsOpen, setIsCreateOpen] = React.useState(false);
+  const [updateModalIsOpen, setIsUpdateOpen] = React.useState(false);
+  const [updateProductId, setUpdateProductId] = React.useState(-1);
+
+  function openCreateModal() {
+    setIsCreateOpen(true);
+  }
+
+  function closeCreateModal() {
+    setIsCreateOpen(false);
+  }
+
+  function openUpdateModal() {
+    setIsUpdateOpen(true);
+  }
+
+  function closeUpdateModal() {
+    setIsUpdateOpen(false);
+  }
+
 
   const [pageTokens, setPageTokens] = React.useState(['page2']);
   const [currentPageIndex, setCurrentPageIndex] = React.useState(1);
@@ -78,30 +100,33 @@ function Products() {
   
   const myAPI = mockedAPI();
 
-  
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
   return (
     <View marginTop="1rem">
-        <Button onClick={openModal}>
+        <Button onClick={openCreateModal}>
           Create New Product
         </Button>
         <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Create Product Modal"
+          isOpen={createModalIsOpen}
+          onRequestClose={closeCreateModal}
+          contentLabel="Create Product"
         >
           <ProductCreateForm onSuccess={() => {
             fetchProducts();
-            closeModal();
+            closeCreateModal();
           }}/>
+        </Modal>
+        <Modal
+          isOpen={updateModalIsOpen}
+          onRequestClose={closeUpdateModal}
+          contentLabel="Update Product"
+        >
+          <ProductUpdateForm
+            id={updateProductId}
+            onSuccess={() => {
+              fetchProducts();
+              closeUpdateModal();
+            }}
+          />
         </Modal>
         <Table marginBottom="1rem" marginTop="1rem">
           <TableHead>
@@ -113,7 +138,13 @@ function Products() {
             {products.map(product => (
               <TableRow>
                 <TableCell as="tr">
-                  <Button marginRight="1rem"><FaPenToSquare /></Button>
+                  <Button
+                    marginRight="1rem"
+                    onClick={() => {
+                      setUpdateProductId(product.id);
+                      openUpdateModal();
+                    }}
+                  ><FaPenToSquare /></Button>
                   {product.name}
                 </TableCell>
                 <TableCell as="tr">{product.price}</TableCell>

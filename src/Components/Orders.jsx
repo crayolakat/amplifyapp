@@ -11,7 +11,6 @@ import {
 } from "@aws-amplify/ui-react"
 import '@aws-amplify/ui-react/styles.css';
 import Modal from "react-modal";
-import OrderCreateForm from "../ui-components/OrderCreateForm";
 import OrderUpdateForm from "../ui-components/OrderUpdateForm";
 import { listOrders } from "../graphql/queries";
 
@@ -33,17 +32,8 @@ function Orders() {
   }
 
   // Modals
-  const [createModalIsOpen, setIsCreateOpen] = React.useState(false);
   const [updateModalIsOpen, setIsUpdateOpen] = React.useState(false);
   const [updateOrderId, setUpdateOrderId] = React.useState(-1);
-
-  function openCreateModal() {
-    setIsCreateOpen(true);
-  }
-
-  function closeCreateModal() {
-    setIsCreateOpen(false);
-  }
 
   function openUpdateModal() {
     setIsUpdateOpen(true);
@@ -100,19 +90,9 @@ function Orders() {
 
   return (
     <View marginTop="1rem">
-        <Button onClick={openCreateModal}>
-          Create New Order
+        <Button onClick={fetchOrders}>
+          View All Orders
         </Button>
-        <Modal
-          isOpen={createModalIsOpen}
-          onRequestClose={closeCreateModal}
-          contentLabel="Create Order"
-        >
-          <OrderCreateForm onSuccess={() => {
-            fetchOrders();
-            closeCreateModal();
-          }}/>
-        </Modal>
         <Modal
           isOpen={updateModalIsOpen}
           onRequestClose={closeUpdateModal}
@@ -120,8 +100,12 @@ function Orders() {
         >
           <OrderUpdateForm
             id={updateOrderId}
-            onSuccess={() => {
-              fetchOrders();
+            onSuccess={fields => {
+              let order = orders.find(order => order.id === updateOrderId);
+              order.quantity = fields.quantity;
+              order.status = fields.status;
+              order.tracking_company = fields.tracking_company;
+              order.tracking_number = fields.tracking_number;
               closeUpdateModal();
             }}
           />

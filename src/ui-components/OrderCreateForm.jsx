@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, SelectField, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
@@ -27,7 +27,7 @@ export default function OrderCreateForm(props) {
     quantity: "",
     tracking_company: "",
     tracking_number: "",
-    status: "",
+    status: "Processing",
   };
   const [quantity, setQuantity] = React.useState(initialValues.quantity);
   const [tracking_company, setTracking_company] = React.useState(
@@ -220,7 +220,7 @@ export default function OrderCreateForm(props) {
         hasError={errors.tracking_number?.hasError}
         {...getOverrideProps(overrides, "tracking_number")}
       ></TextField>
-      <TextField
+      <SelectField
         label="Status"
         isRequired={true}
         isReadOnly={false}
@@ -246,7 +246,11 @@ export default function OrderCreateForm(props) {
         errorMessage={errors.status?.errorMessage}
         hasError={errors.status?.hasError}
         {...getOverrideProps(overrides, "status")}
-      ></TextField>
+      >
+        <option value="Processing">Processing</option>
+        <option value="Canceled">Canceled</option>
+        <option value="Delivered">Delivered</option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

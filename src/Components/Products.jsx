@@ -9,13 +9,12 @@ import {
   TableRow,
   View
 } from "@aws-amplify/ui-react"
-import "../ui-components/NoteCreateForm";
 import '@aws-amplify/ui-react/styles.css';
-import { FaPenToSquare } from "react-icons/fa6";
 import Modal from "react-modal";
 import ProductCreateForm from "../ui-components/ProductCreateForm";
 import ProductUpdateForm from "../ui-components/ProductUpdateForm";
 import { listProducts } from "../graphql/queries";
+import OrderCreateForm from "../ui-components/OrderCreateForm";
 
 function Products() {
   // Products
@@ -37,7 +36,8 @@ function Products() {
   // Modals
   const [createModalIsOpen, setIsCreateOpen] = React.useState(false);
   const [updateModalIsOpen, setIsUpdateOpen] = React.useState(false);
-  const [updateProductId, setUpdateProductId] = React.useState(-1);
+  const [currentProductId, setCurrentProductId] = React.useState(-1);
+  const [orderModalIsOpen, setIsOrderOpen] = React.useState(false);
 
   function openCreateModal() {
     setIsCreateOpen(true);
@@ -55,6 +55,13 @@ function Products() {
     setIsUpdateOpen(false);
   }
 
+  function openOrderModal() {
+    setIsOrderOpen(true);
+  }
+
+  function closeOrderModal() {
+    setIsOrderOpen(false);
+  }
 
   const [pageTokens, setPageTokens] = React.useState(['page2']);
   const [currentPageIndex, setCurrentPageIndex] = React.useState(1);
@@ -121,10 +128,23 @@ function Products() {
           contentLabel="Update Product"
         >
           <ProductUpdateForm
-            id={updateProductId}
+            id={currentProductId}
             onSuccess={() => {
               fetchProducts();
               closeUpdateModal();
+            }}
+          />
+        </Modal>
+        <Modal
+          isOpen={orderModalIsOpen}
+          onRequestClose={closeOrderModal}
+          contentLabel="Create Order"
+        >
+          <OrderCreateForm
+            productId={currentProductId}
+            onSuccess={() => {
+              fetchProducts();
+              closeOrderModal();
             }}
           />
         </Modal>
@@ -136,19 +156,30 @@ function Products() {
               <TableCell as="th">Stock Quantity</TableCell>
             </TableRow>
             {products.map(product => (
-              <TableRow>
-                <TableCell as="tr">
+              <TableRow key={product.id}>
+                <TableCell>
                   <Button
                     marginRight="1rem"
                     onClick={() => {
-                      setUpdateProductId(product.id);
+                      setCurrentProductId(product.id);
                       openUpdateModal();
                     }}
-                  ><FaPenToSquare /></Button>
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    marginRight="1rem"
+                    onClick={() => {
+                      setCurrentProductId(product.id);
+                      openOrderModal();
+                    }}
+                  >
+                    Add Order
+                  </Button>
                   {product.name}
                 </TableCell>
-                <TableCell as="tr">{product.price}</TableCell>
-                <TableCell as="tr">{product.stock_quantity}</TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.stock_quantity}</TableCell>
               </TableRow>
             ))}
           </TableHead>

@@ -13,11 +13,15 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type OrderUpdateFormInputValues = {
+    orderProductId?: string;
+    quantity?: number;
     tracking_company?: string;
     tracking_number?: string;
     status?: string;
 };
 export declare type OrderUpdateFormValidationValues = {
+    orderProductId?: ValidationFunction<string>;
+    quantity?: ValidationFunction<number>;
     tracking_company?: ValidationFunction<string>;
     tracking_number?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
@@ -25,6 +29,8 @@ export declare type OrderUpdateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type OrderUpdateFormOverridesProps = {
     OrderUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+    orderProductId?: PrimitiveOverrideProps<TextFieldProps>;
+    quantity?: PrimitiveOverrideProps<TextFieldProps>;
     tracking_company?: PrimitiveOverrideProps<TextFieldProps>;
     tracking_number?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<TextFieldProps>;

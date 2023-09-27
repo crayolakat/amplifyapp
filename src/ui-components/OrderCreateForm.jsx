@@ -20,13 +20,16 @@ export default function OrderCreateForm(props) {
     onValidate,
     onChange,
     overrides,
+    productId,
     ...rest
   } = props;
   const initialValues = {
+    quantity: "",
     tracking_company: "",
     tracking_number: "",
     status: "",
   };
+  const [quantity, setQuantity] = React.useState(initialValues.quantity);
   const [tracking_company, setTracking_company] = React.useState(
     initialValues.tracking_company
   );
@@ -36,12 +39,14 @@ export default function OrderCreateForm(props) {
   const [status, setStatus] = React.useState(initialValues.status);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
+    setQuantity(initialValues.quantity);
     setTracking_company(initialValues.tracking_company);
     setTracking_number(initialValues.tracking_number);
     setStatus(initialValues.status);
     setErrors({});
   };
   const validations = {
+    quantity: [{ type: "Required" }],
     tracking_company: [],
     tracking_number: [],
     status: [{ type: "Required" }],
@@ -72,6 +77,7 @@ export default function OrderCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          quantity,
           tracking_company,
           tracking_number,
           status,
@@ -104,6 +110,7 @@ export default function OrderCreateForm(props) {
               modelFields[key] = null;
             }
           });
+          modelFields.orderProductId = productId;
           await API.graphql({
             query: createOrder,
             variables: {
@@ -129,6 +136,37 @@ export default function OrderCreateForm(props) {
       {...rest}
     >
       <TextField
+        label="Quantity"
+        isRequired={true}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={quantity}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              quantity: value,
+              tracking_company,
+              tracking_number,
+              status,
+            };
+            const result = onChange(modelFields);
+            value = result?.quantity ?? value;
+          }
+          if (errors.quantity?.hasError) {
+            runValidationTasks("quantity", value);
+          }
+          setQuantity(value);
+        }}
+        onBlur={() => runValidationTasks("quantity", quantity)}
+        errorMessage={errors.quantity?.errorMessage}
+        hasError={errors.quantity?.hasError}
+        {...getOverrideProps(overrides, "quantity")}
+      ></TextField>
+      <TextField
         label="Tracking company"
         isRequired={false}
         isReadOnly={false}
@@ -137,6 +175,7 @@ export default function OrderCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              quantity,
               tracking_company: value,
               tracking_number,
               status,
@@ -163,6 +202,7 @@ export default function OrderCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              quantity,
               tracking_company,
               tracking_number: value,
               status,
@@ -189,6 +229,7 @@ export default function OrderCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              quantity,
               tracking_company,
               tracking_number,
               status: value,

@@ -1,54 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const createNote = /* GraphQL */ `
-  mutation CreateNote(
-    $input: CreateNoteInput!
-    $condition: ModelNoteConditionInput
-  ) {
-    createNote(input: $input, condition: $condition) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateNote = /* GraphQL */ `
-  mutation UpdateNote(
-    $input: UpdateNoteInput!
-    $condition: ModelNoteConditionInput
-  ) {
-    updateNote(input: $input, condition: $condition) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteNote = /* GraphQL */ `
-  mutation DeleteNote(
-    $input: DeleteNoteInput!
-    $condition: ModelNoteConditionInput
-  ) {
-    deleteNote(input: $input, condition: $condition) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
 export const createOrder = /* GraphQL */ `
   mutation CreateOrder(
     $input: CreateOrderInput!
@@ -56,21 +8,13 @@ export const createOrder = /* GraphQL */ `
   ) {
     createOrder(input: $input, condition: $condition) {
       id
-      product {
-        id
-        name
-        price
-        stock_quantity
-        createdAt
-        updatedAt
-        __typename
-      }
+      orderProductId
+      quantity
       tracking_company
       tracking_number
       status
       createdAt
       updatedAt
-      orderProductId
       __typename
     }
   }
@@ -82,21 +26,13 @@ export const updateOrder = /* GraphQL */ `
   ) {
     updateOrder(input: $input, condition: $condition) {
       id
-      product {
-        id
-        name
-        price
-        stock_quantity
-        createdAt
-        updatedAt
-        __typename
-      }
+      orderProductId
+      quantity
       tracking_company
       tracking_number
       status
       createdAt
       updatedAt
-      orderProductId
       __typename
     }
   }
@@ -108,21 +44,13 @@ export const deleteOrder = /* GraphQL */ `
   ) {
     deleteOrder(input: $input, condition: $condition) {
       id
-      product {
-        id
-        name
-        price
-        stock_quantity
-        createdAt
-        updatedAt
-        __typename
-      }
+      orderProductId
+      quantity
       tracking_company
       tracking_number
       status
       createdAt
       updatedAt
-      orderProductId
       __typename
     }
   }

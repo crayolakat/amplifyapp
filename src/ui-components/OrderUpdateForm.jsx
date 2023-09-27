@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, SelectField, TextField } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
@@ -25,10 +25,16 @@ export default function OrderUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
+    orderProductId: "",
+    quantity: "",
     tracking_company: "",
     tracking_number: "",
     status: "",
   };
+  const [orderProductId, setOrderProductId] = React.useState(
+    initialValues.orderProductId
+  );
+  const [quantity, setQuantity] = React.useState(initialValues.quantity);
   const [tracking_company, setTracking_company] = React.useState(
     initialValues.tracking_company
   );
@@ -41,6 +47,8 @@ export default function OrderUpdateForm(props) {
     const cleanValues = orderRecord
       ? { ...initialValues, ...orderRecord }
       : initialValues;
+    setOrderProductId(cleanValues.orderProductId);
+    setQuantity(cleanValues.quantity);
     setTracking_company(cleanValues.tracking_company);
     setTracking_number(cleanValues.tracking_number);
     setStatus(cleanValues.status);
@@ -63,6 +71,8 @@ export default function OrderUpdateForm(props) {
   }, [idProp, orderModelProp]);
   React.useEffect(resetStateValues, [orderRecord]);
   const validations = {
+    orderProductId: [{ type: "Required" }],
+    quantity: [{ type: "Required" }],
     tracking_company: [],
     tracking_number: [],
     status: [{ type: "Required" }],
@@ -93,6 +103,8 @@ export default function OrderUpdateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
+          orderProductId,
+          quantity,
           tracking_company: tracking_company ?? null,
           tracking_number: tracking_number ?? null,
           status,
@@ -148,6 +160,68 @@ export default function OrderUpdateForm(props) {
       {...rest}
     >
       <TextField
+        label="Order product id"
+        isRequired={true}
+        isReadOnly={false}
+        value={orderProductId}
+        labelHidden={true}
+        type="hidden"
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              orderProductId: value,
+              quantity,
+              tracking_company,
+              tracking_number,
+              status,
+            };
+            const result = onChange(modelFields);
+            value = result?.orderProductId ?? value;
+          }
+          if (errors.orderProductId?.hasError) {
+            runValidationTasks("orderProductId", value);
+          }
+          setOrderProductId(value);
+        }}
+        onBlur={() => runValidationTasks("orderProductId", orderProductId)}
+        errorMessage={errors.orderProductId?.errorMessage}
+        hasError={errors.orderProductId?.hasError}
+        {...getOverrideProps(overrides, "orderProductId")}
+      ></TextField>
+      <TextField
+        label="Quantity"
+        isRequired={true}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={quantity}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              orderProductId,
+              quantity: value,
+              tracking_company,
+              tracking_number,
+              status,
+            };
+            const result = onChange(modelFields);
+            value = result?.quantity ?? value;
+          }
+          if (errors.quantity?.hasError) {
+            runValidationTasks("quantity", value);
+          }
+          setQuantity(value);
+        }}
+        onBlur={() => runValidationTasks("quantity", quantity)}
+        errorMessage={errors.quantity?.errorMessage}
+        hasError={errors.quantity?.hasError}
+        {...getOverrideProps(overrides, "quantity")}
+      ></TextField>
+      <TextField
         label="Tracking company"
         isRequired={false}
         isReadOnly={false}
@@ -156,6 +230,8 @@ export default function OrderUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              orderProductId,
+              quantity,
               tracking_company: value,
               tracking_number,
               status,
@@ -182,6 +258,8 @@ export default function OrderUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              orderProductId,
+              quantity,
               tracking_company,
               tracking_number: value,
               status,
@@ -199,7 +277,7 @@ export default function OrderUpdateForm(props) {
         hasError={errors.tracking_number?.hasError}
         {...getOverrideProps(overrides, "tracking_number")}
       ></TextField>
-      <TextField
+      <SelectField
         label="Status"
         isRequired={true}
         isReadOnly={false}
@@ -208,6 +286,8 @@ export default function OrderUpdateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
+              orderProductId,
+              quantity,
               tracking_company,
               tracking_number,
               status: value,
@@ -224,7 +304,11 @@ export default function OrderUpdateForm(props) {
         errorMessage={errors.status?.errorMessage}
         hasError={errors.status?.hasError}
         {...getOverrideProps(overrides, "status")}
-      ></TextField>
+      >
+        <option value="Processing">Processing</option>
+        <option value="Canceled">Canceled</option>
+        <option value="Delivered">Delivered</option>
+      </SelectField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

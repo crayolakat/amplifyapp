@@ -1,13 +1,7 @@
-type Note @model @auth(rules: [ { allow: public } ]) {
-  id: ID!
-  name: String!
-  description: String
-  image: String
-}
-
 type Order @model @auth(rules: [ { allow: public } ]) {
   id: ID!
-  product: Product! @hasOne
+  orderProductId: String!
+  quantity: Int!
   tracking_company: String
   tracking_number: String
   status: String!

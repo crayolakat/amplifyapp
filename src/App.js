@@ -18,10 +18,10 @@ const App = ({ signOut }) => {
         textAlign="center"
       >Ping Pong's Toy Factory</Heading>
       <Tabs justifyContent="space-around">
-        <TabItem title="Products">
+        <TabItem id="products-tab" title="Products">
         <Products />
         </TabItem>
-        <TabItem title="Orders">
+        <TabItem id="orders-tab" title="Orders">
           <Orders />
         </TabItem>
       </Tabs>

@@ -7,15 +7,15 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Text,
   View
 } from "@aws-amplify/ui-react"
 import '@aws-amplify/ui-react/styles.css';
 import Modal from "react-modal";
 import OrderUpdateForm from "../ui-components/OrderUpdateForm";
-import { listOrders } from "../graphql/queries";
+import { listOrders, listProducts } from "../graphql/queries";
 
 function Orders() {
-  // Orders
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -26,8 +26,20 @@ function Orders() {
     const apiData = await API.graphql({ query: listOrders });
     const ordersFromAPI = apiData.data.listOrders.items;
     await Promise.all(
-      ordersFromAPI.map(async note => note)
+      ordersFromAPI.map(async order => order)
     );
+    const productsData = await API.graphql({ query: listProducts });
+    const productsFromAPI = productsData.data.listProducts.items;
+    await Promise.all(
+      productsFromAPI.map(async product => product)
+    );
+    const productsDict = {};
+    productsFromAPI.forEach(product => {
+      productsDict[product.id] = product.name;
+    });
+    ordersFromAPI.forEach(order => {
+      order.product_name = productsDict[order.orderProductId];
+    })
     setOrders(ordersFromAPI);
   }
 
@@ -90,9 +102,7 @@ function Orders() {
 
   return (
     <View marginTop="1rem">
-        <Button onClick={fetchOrders}>
-          View All Orders
-        </Button>
+        <Text color="red" textAlign="center">TODO: Implement sorting and filtering</Text>
         <Modal
           isOpen={updateModalIsOpen}
           onRequestClose={closeUpdateModal}
@@ -115,6 +125,7 @@ function Orders() {
             <TableRow>
               <TableCell as="th">ID</TableCell>
               <TableCell as="th">Product Name</TableCell>
+              <TableCell as="th">Quantity</TableCell>
               <TableCell as="th">Tracking Company</TableCell>
               <TableCell as="th">Tracking Number</TableCell>
               <TableCell as="th">Status</TableCell>
@@ -131,7 +142,8 @@ function Orders() {
                   >Edit</Button>
                   {order.id}
                 </TableCell>
-                <TableCell>{order.price}</TableCell>
+                <TableCell>{order.product_name}</TableCell>
+                <TableCell>{order.quantity}</TableCell>
                 <TableCell>{order.tracking_company}</TableCell>
                 <TableCell>{order.tracking_number}</TableCell>
                 <TableCell>{order.status}</TableCell>
@@ -147,6 +159,7 @@ function Orders() {
             onPrevious={() => setCurrentPageIndex(currentPageIndex - 1)}
             onChange={(pageIndex) => setCurrentPageIndex(pageIndex)}
         />
+        <Text color="red" textAlign="center">TODO: Implement pagination</Text>
     </View>
   );
 }

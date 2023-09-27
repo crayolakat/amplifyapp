@@ -9,7 +9,7 @@
 3. Run locally: `npm start`
 
 ## Deployment
-This app is deployed via AWS Amplify. Pushing to the `main` branch will deploy changes to https://main.d1uwevcnuib9bt.amplifyapp.com/. To test the site, either create a new account and log in, or use these test credentials that I created:
+This app is deployed via AWS Amplify. Pushing to the `main` branch will deploy changes to https://main.d28txsxbjern33.amplifyapp.com/. To test the site, either create a new account and log in, or use these test credentials that I created:
 - Username: `testusername`
 - Password: `testpassword`
 
@@ -24,7 +24,7 @@ This app is deployed via AWS Amplify. Pushing to the `main` branch will deploy c
   - Time. Could spend more time on data modeling and optimizations given more time.
 
 ## Front-End
-- Hosted via AWS Amplify and publicly accessible at https://main.d1uwevcnuib9bt.amplifyapp.com/
+- Hosted via AWS Amplify and publicly accessible at https://main.d28txsxbjern33.amplifyapp.com/
 - Styling libraries:
   - [@aws-amplify/ui-react](https://ui.docs.amplify.aws/)
   - [react-modal](https://www.npmjs.com/package/react-modal)
